@@ -1,0 +1,34 @@
+modLoader="javafml"
+loaderVersion="[40,)"
+license="GNU GPLv3"
+
+[[mods]] #mandatory
+modId="inventoriofixes"
+version="1.0.0"
+displayName="Inventorio Fixes"
+displayURL="https://github.com/quiltedhills/inventoriofixes"
+authors="quiltedhills"
+displayTest="MATCH_VERSION"
+description='''
+A collection of patches targetting various bugs and exploits within the mod Inventorio.
+'''
+
+[[dependencies.inventoriofixes]]
+    modId="forge"
+    mandatory=true
+    versionRange="[40,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.inventoriofixes]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.18.2,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.inventoriofixes]]
+    modId="inventorio"
+    mandatory=true
+    versionRange="[1.9.1,)"
+    ordering="BEFORE"
+    side="BOTH"

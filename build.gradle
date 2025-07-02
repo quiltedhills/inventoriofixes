@@ -1,0 +1,122 @@
+buildscript {
+    repositories {
+        maven { url = 'https://maven.minecraftforge.net' }
+        maven { url = 'https://maven.parchmentmc.org' }
+        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath 'org.parchmentmc:librarian:1.+'
+        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
+    }
+}
+plugins {
+    id 'eclipse'
+    id 'maven-publish'
+}
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.parchmentmc.librarian.forgegradle'
+apply plugin: 'org.spongepowered.mixin'
+
+
+version = '1.0.0-1.18.2'
+group = 'net.quiltedhills'
+archivesBaseName = 'inventoriofixes'
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
+minecraft {
+    mappings channel: 'parchment', version: '2022.11.06-1.18.2'
+
+    runs {
+        client {
+            args "--mixin.config=inventoriofixes.mixins.json"
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                inventoriofixes {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            args "--mixin.config=mixins.inventoriofixes.json"
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                inventoriofixes {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+repositories {
+    maven { url = "https://maven.spongepowered.org" }
+    maven { url "https://www.cursemaven.com" }
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.18.2-40.2.21'
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+
+    // Inventorio and its dependencies
+    implementation fg.deobf("curse.maven:inventorio-forge-497122:4557760")
+    runtimeOnly fg.deobf("curse.maven:cloth-config-348521:5729090")
+    runtimeOnly fg.deobf("curse.maven:kotlin-for-forge-351264:4513187")
+
+    // Optional mods that we include compatibility patches for
+    compileOnly fg.deobf("curse.maven:terrafirmacraft-302973:5065452")
+    //runtimeOnly fg.deobf("curse.maven:patchouli-306770:3846086")
+    compileOnly fg.deobf("curse.maven:tinkers-construct-74072:4509008")
+    //runtimeOnly fg.deobf("curse.maven:mantle-74924:5134546")
+    compileOnly fg.deobf("curse.maven:hardcore-revival-274036:3830873")
+    compileOnly fg.deobf("curse.maven:balm-531761:4442615")
+    compileOnly fg.deobf("curse.maven:tool-belt-260262:4124030")
+
+    // These are for testing exploits
+    //runtimeOnly fg.deobf("curse.maven:chopping-block-729539:4297417")
+}
+
+mixin {
+    add sourceSets.main, 'inventoriofixes.refmap.json'
+    config 'inventoriofixes.mixins.json'
+
+    //debug.verbose = true
+    //debug.export = true
+    //dumpTargetOnFailure = true
+}
+
+jar {
+    manifest {
+        attributes([
+                "Specification-Title"     : "inventoriofixes",
+                "Specification-Vendor"    : "quiltedhills",
+                "Specification-Version"   : "1",
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : project.jar.archiveVersion,
+                "Implementation-Vendor"   : "quiltedhills",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+jar.finalizedBy('reobfJar')
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+}
