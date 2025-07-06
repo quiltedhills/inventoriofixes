@@ -20,8 +20,8 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'org.spongepowered.mixin'
 
 
-version = '1.0.0-1.18.2'
-group = 'net.quiltedhills'
+version = '1.0.1-1.18.2'
+group = 'net.quiltedhills.inventoriofixes'
 archivesBaseName = 'inventoriofixes'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -48,7 +48,7 @@ minecraft {
         }
 
         server {
-            args "--mixin.config=mixins.inventoriofixes.json"
+            args "--mixin.config=inventoriofixes.mixins.json"
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             workingDirectory project.file('run')
@@ -86,10 +86,10 @@ dependencies {
     //runtimeOnly fg.deobf("curse.maven:mantle-74924:5134546")
     compileOnly fg.deobf("curse.maven:hardcore-revival-274036:3830873")
     compileOnly fg.deobf("curse.maven:balm-531761:4442615")
-    compileOnly fg.deobf("curse.maven:tool-belt-260262:4124030")
 
     // These are for testing exploits
     //runtimeOnly fg.deobf("curse.maven:chopping-block-729539:4297417")
+    //runtimeOnly fg.deobf("curse.maven:tool-belt-260262:4124030")
 }
 
 mixin {

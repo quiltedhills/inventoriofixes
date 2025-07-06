@@ -1,10 +1,7 @@
 package net.quiltedhills.inventoriofixes.mixin.minecraft;
 
-import dev.gigaherz.toolbelt.client.RadialMenuScreen;
 import me.lizardofoz.inventorio.player.PlayerInventoryAddon;
 import me.lizardofoz.inventorio.util.MixinHelpers;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -43,13 +40,7 @@ public abstract class PlayerMixin {
                 } else {
                     inventorioAddon.toolBelt.set(index, ItemStack.EMPTY);
                     inventorioAddon.setDisplayTool(ItemStack.EMPTY);
-                    if (!self.getInventory().add(pStack)) {
-                        self.drop(pStack, true);
-
-                        // For some reason, the toolbelt radial menu freaks out in this specific case
-                        Screen currentScreen = Minecraft.getInstance().screen;
-                        if (currentScreen instanceof RadialMenuScreen) currentScreen.onClose();
-                    }
+                    self.getInventory().placeItemBackInInventory(pStack);
                 }
                 ci.cancel();
             }

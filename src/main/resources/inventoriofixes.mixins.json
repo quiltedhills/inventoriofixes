@@ -6,7 +6,6 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "inventoriofixes.refmap.json",
   "mixins": [
-    "hardcorerevival.HardcoreRevivalClientMixin",
     "inventorio.PlayerInventoryExtensionAccessor",
     "inventorio.PlayerInventoryInjectsMixin",
     "minecraft.InventoryMixin",
@@ -14,6 +13,9 @@
     "tconstruct.SoulboundModifierMixin",
     "tfc.HelpersMixin",
     "tfc.StackFoodPacketMixin"
+  ],
+  "client": [
+    "hardcorerevival.HardcoreRevivalClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1

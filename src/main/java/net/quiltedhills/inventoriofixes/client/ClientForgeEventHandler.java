@@ -18,6 +18,7 @@ import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.network.PacketDistributor;
 import net.quiltedhills.inventoriofixes.InventorioFixes;
 
@@ -75,10 +76,12 @@ public class ClientForgeEventHandler {
 
 
         // Unrelated to any of my own keybinds - piling in support for TFC's Stack Food keybind
-        if (TFCKeyBindings.STACK_FOOD.isActiveAndMatches(InputConstants.getKey(event.getKeyCode(), event.getScanCode())) && event.getScreen() instanceof InventorioScreen inv) {
-            Slot slot = inv.getSlotUnderMouse();
-            if (slot != null) {
-                PacketHandler.send(PacketDistributor.SERVER.noArg(), new StackFoodPacket(slot.index));
+        if (FMLLoader.getLoadingModList().getModFileById("tfc") != null) {
+            if (TFCKeyBindings.STACK_FOOD.isActiveAndMatches(InputConstants.getKey(event.getKeyCode(), event.getScanCode())) && event.getScreen() instanceof InventorioScreen inv) {
+                Slot slot = inv.getSlotUnderMouse();
+                if (slot != null) {
+                    PacketHandler.send(PacketDistributor.SERVER.noArg(), new StackFoodPacket(slot.index));
+                }
             }
         }
     }

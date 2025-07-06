@@ -2,11 +2,12 @@ modLoader="javafml"
 loaderVersion="[40,)"
 license="GNU GPLv3"
 
-[[mods]] #mandatory
+[[mods]]
 modId="inventoriofixes"
-version="1.0.0"
+version="1.0.1"
 displayName="Inventorio Fixes"
 displayURL="https://github.com/quiltedhills/inventoriofixes"
+issueTrackerURL="https://github.com/quiltedhills/inventoriofixes/issues"
 authors="quiltedhills"
 displayTest="MATCH_VERSION"
 description='''
