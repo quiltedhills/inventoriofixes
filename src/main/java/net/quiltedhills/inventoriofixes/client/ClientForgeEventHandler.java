@@ -21,6 +21,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.network.PacketDistributor;
 import net.quiltedhills.inventoriofixes.InventorioFixes;
+import net.quiltedhills.inventoriofixes.config.ClientConfig;
 
 @Mod.EventBusSubscriber(modid = InventorioFixes.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientForgeEventHandler {
@@ -28,28 +29,40 @@ public class ClientForgeEventHandler {
     public static void onKeyEvent(InputEvent.KeyInputEvent event) {
         Minecraft minecraft = Minecraft.getInstance();
         Screen currentScreen = minecraft.screen;
+        ClientConfig configs = InventorioFixes.CLIENT_CONFIG;
 
-        if (ExtraKeybindings.OPEN_INVENTORIO_INVENTORY.isDown()) {
+        boolean inAnyContainer = currentScreen instanceof AbstractContainerScreen<?>;
+        boolean inVanillaInventory = currentScreen instanceof InventoryScreen;
+        boolean inInventorioInventory = currentScreen instanceof InventorioScreen;
+        ClientConfig.ForceKeybindsGuiBehavior guiBehavior = configs.forceKeybindsGuiBehavior.get();
 
-            if (!(currentScreen instanceof InventoryScreen) && currentScreen instanceof AbstractContainerScreen<?>) {
-                currentScreen.onClose();
-            } else {
+        if (ExtraKeybindings.OPEN_INVENTORIO_INVENTORY.consumeClick()) {
+            if (inInventorioInventory) {
+                if (guiBehavior != ClientConfig.ForceKeybindsGuiBehavior.SWITCH) currentScreen.onClose();
+            } else if (inAnyContainer) currentScreen.onClose();
+
+            if (!inAnyContainer || (inVanillaInventory && guiBehavior != ClientConfig.ForceKeybindsGuiBehavior.CLOSE)) {
                 InventorioNetworking.getInstance().c2sOpenInventorioScreen();
-                InventorioScreen.shouldOpenVanillaInventory = false;
+                if (configs.forceKeybindsRememberState.get()) {
+                    InventorioScreen.shouldOpenVanillaInventory = false;
+                }
             }
             return;
         }
 
-        if (ExtraKeybindings.OPEN_VANILLA_INVENTORY.isDown()) {
-            if (!(currentScreen instanceof InventorioScreen) && currentScreen instanceof AbstractContainerScreen<?>) {
-                currentScreen.onClose();
-            } else {
+        if (ExtraKeybindings.OPEN_VANILLA_INVENTORY.consumeClick()) {
+            if (inVanillaInventory) {
+                if (guiBehavior != ClientConfig.ForceKeybindsGuiBehavior.SWITCH) currentScreen.onClose();
+            } else if (inAnyContainer) currentScreen.onClose();
+
+            if (!inAnyContainer || (inInventorioInventory && guiBehavior != ClientConfig.ForceKeybindsGuiBehavior.CLOSE)) {
                 assert minecraft.player != null;
                 minecraft.setScreen(new InventoryScreen(minecraft.player));
-                InventorioScreen.shouldOpenVanillaInventory = true;
+                if (configs.forceKeybindsRememberState.get()) {
+                    InventorioScreen.shouldOpenVanillaInventory = true;
+                }
             }
         }
-
     }
 
     @SubscribeEvent
@@ -58,21 +71,21 @@ public class ClientForgeEventHandler {
         Screen currentScreen = minecraft.screen;
         boolean shouldPlaySound = false;
 
-
         if (ExtraKeybindings.SWITCH_INVENTORY.isActiveAndMatches(InputConstants.getKey(event.getKeyCode(), event.getScanCode()))) {
+            assert minecraft.player != null;
             if (currentScreen instanceof InventorioScreen) {
                 currentScreen.onClose();
                 minecraft.setScreen(new InventoryScreen(minecraft.player));
                 InventorioScreen.shouldOpenVanillaInventory = true;
                 shouldPlaySound = true;
             } else if (currentScreen instanceof InventoryScreen) {
+                currentScreen.onClose();
                 InventorioNetworking.getInstance().c2sOpenInventorioScreen();
                 InventorioScreen.shouldOpenVanillaInventory = false;
                 shouldPlaySound = true;
             }
         }
-        if (shouldPlaySound)
-            minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+        if (shouldPlaySound) minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
 
         // Unrelated to any of my own keybinds - piling in support for TFC's Stack Food keybind

@@ -6,6 +6,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "inventoriofixes.refmap.json",
   "mixins": [
+    "create_sa.FuelAndFillPrProcedureMixin",
     "inventorio.PlayerInventoryExtensionAccessor",
     "inventorio.PlayerInventoryInjectsMixin",
     "minecraft.InventoryMixin",
@@ -15,7 +16,8 @@
     "tfc.StackFoodPacketMixin"
   ],
   "client": [
-    "hardcorerevival.HardcoreRevivalClientMixin"
+    "hardcorerevival.HardcoreRevivalClientMixin",
+    "inventorio.PlayerInventoryAddonMixin"
   ],
   "injectors": {
     "defaultRequire": 1

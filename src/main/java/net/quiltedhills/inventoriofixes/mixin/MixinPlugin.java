@@ -21,6 +21,7 @@ public class MixinPlugin implements IMixinConfigPlugin {
 
 
     private static final Set<String> OPTIONAL_MODS = Set.of(
+            "create_sa",
             "hardcorerevival",
             "tconstruct",
             "tfc"

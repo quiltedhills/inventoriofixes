@@ -6,11 +6,9 @@ import net.dries007.tfc.common.capabilities.food.FoodCapability;
 import net.dries007.tfc.common.capabilities.food.IFood;
 import net.dries007.tfc.network.StackFoodPacket;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
-import net.quiltedhills.inventoriofixes.InventorioFixes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,7 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * todo
+ * Patches the Stack Food packet to also work in the Inventorio inventory
  */
 @Mixin(value = StackFoodPacket.class, remap = false)
 public abstract class StackFoodPacketMixin {

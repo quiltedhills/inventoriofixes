@@ -20,7 +20,7 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'org.spongepowered.mixin'
 
 
-version = '1.0.1-1.18.2'
+version = '1.1.0-1.18.2'
 group = 'net.quiltedhills.inventoriofixes'
 archivesBaseName = 'inventoriofixes'
 
@@ -86,10 +86,15 @@ dependencies {
     //runtimeOnly fg.deobf("curse.maven:mantle-74924:5134546")
     compileOnly fg.deobf("curse.maven:hardcore-revival-274036:3830873")
     compileOnly fg.deobf("curse.maven:balm-531761:4442615")
+    compileOnly fg.deobf("curse.maven:create-stuff-additions-466792:4703282")
 
     // These are for testing exploits
     //runtimeOnly fg.deobf("curse.maven:chopping-block-729539:4297417")
     //runtimeOnly fg.deobf("curse.maven:tool-belt-260262:4124030")
+
+    // Configs testing
+    //runtimeOnly fg.deobf("curse.maven:configured-457570:4462832")
+    //runtimeOnly fg.deobf("curse.maven:better-mods-button-541584:4608772")
 }
 
 mixin {
