@@ -4,7 +4,7 @@ license="GNU GPLv3"
 
 [[mods]]
 modId="inventoriofixes"
-version="1.1.0"
+version="1.1.1"
 displayName="Inventorio Fixes"
 displayURL="https://github.com/quiltedhills/inventoriofixes"
 issueTrackerURL="https://github.com/quiltedhills/inventoriofixes/issues"
