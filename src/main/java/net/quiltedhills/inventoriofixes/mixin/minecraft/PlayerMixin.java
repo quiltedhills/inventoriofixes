@@ -30,8 +30,10 @@ public abstract class PlayerMixin {
         Player self = (Player)(Object) this;
         MixinHelpers.withInventoryAddon(self, (inventorioAddon) -> {
             ItemStack mainHandStack = inventorioAddon.getDisplayedMainHandStack();
-            if (mainHandStack != null) {
+            if (mainHandStack != null && mainHandStack.isEmpty()) {
                 int index = inventorioAddon.findFittingToolBeltIndex(mainHandStack);
+                if (index < 0 || index >= inventorioAddon.toolBelt.size()) return; // Apparently there are edge cases where this is necessary :p
+
                 boolean canInsertIntoToolSlot = pStack.isEmpty() || PlayerInventoryAddon.Companion.getToolBeltTemplates().get(index).test(pStack, inventorioAddon);
 
                 if (canInsertIntoToolSlot) {
